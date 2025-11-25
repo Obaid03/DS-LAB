@@ -3,44 +3,48 @@ using namespace std;
 class MyQueue{
     int *array;
     int Front;
+    int Rear;
     int capacity;
     public:
     MyQueue(int s){
         capacity=s;
         array=new int[s];
-        Front=-1;
+        Front=0;
+        Rear=-1;
+
     }
     void Enqueue(int data){
-        if(Front==capacity-1){
+        if(isfull()){
             cout<<"Queue Overflow"<<endl;
             return;
         }
-        array[++Front]=data;
+        array[++Rear]=data;
     }
     void Dequeue(){
-        if(Front==-1){
+        if(isempty()){
             cout<<"Queue Already Empty"<<endl;
             return; 
         }
-        for(int i=1;i<=Front;i++){
-            array[i-1]=array[i];
+        Front++;
+        if(Front>Rear){
+            Front=0;
+            Rear=-1;
         }
-        Front--;
     }
     void Display(){
-         if(Front==-1){
+         if(isempty()){
             cout<<"Queue Already Empty"<<endl;
             return; 
         }
-        for(int i=0;i<=Front;i++){
+        for(int i=Front;i<=Rear;i++){
             cout<<array[i]<<endl;
         }
     }
     bool isempty(){
-        return Front==-1;
+        return Front>Rear;
     }
     bool isfull(){
-        return Front==capacity-1;
+        return Rear==capacity-1;
     }
 };
 int main(){
@@ -57,5 +61,4 @@ int main(){
     Q.Dequeue();
     cout<<"After Popping"<<endl;
     Q.Display();
-
 }
