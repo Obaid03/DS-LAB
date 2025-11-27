@@ -2,39 +2,81 @@
 #include<iostream>
 using namespace std;
 class MyStack{
-    string result;
+    char* oper;
     int top;
     int size;
     public:
         MyStack(int s){
             top=-1;
-            result = " ";
+            oper=new char[s];
             size=s;
         }
-        void push(int data){
+        void push(char data){
             if(top==size-1){
                 cout<<"Stack OverFlow"<<endl;
                 return;
             }
-            array[++top]=data;
+            oper[++top]=data;
         }
-        int pop(){
+        char pop(){
             if(top==-1){
-                cout<<"Stack Underflow"<<endl;
-                return -1;
+                return '\0';
             }
-            return array[top--];
+            return oper[top--];
         }
-        int peek(){
+        char peek(){
             if(top==-1){
-                cout<<"Stack Underflow"<<endl;
-                return -1;
+                return '\0';
             }
-            return array[top];
+
+            return oper[top];
         }
-        void Display(){
-             for(int i=top; i >= 0; i--) {
-            cout << i << "->" << array[i] << endl;
+        bool empty(){
+            return top==-1;
         }
-        }
+        
 };
+int prec(char c){
+    if (c=='+'||c=='-'){
+                return 1;
+            }
+            else if (c=='*'||c=='/'){
+                return 2;
+            }
+            else return 0;
+        }
+int isoperator(char c){
+        if(c=='+'||c=='-'||c=='*'||c=='/'){
+            return 1;
+        }
+        else return 0;
+        }
+string convert(string pre, MyStack &S){
+            string result;
+            int i=0;
+            while(pre[i]!='\0'){
+                if(! isoperator(pre[i])){
+                    result+=pre[i];
+                }
+                else{
+                    while(!S.empty()&&prec(pre[i])<=prec(S.peek())){
+                        result+=S.pop(); 
+                        
+                    }
+                    S.push(pre[i]);            
+                }
+                i++;
+            }
+            while (!S.empty()) {
+            result += S.pop();
+            }
+            
+            return result;
+        }
+int main(){
+    MyStack S(10);
+    string str="a+b*c-d/e";
+    string postfix=convert(str,S);
+    cout<<"Postficx --> "<<postfix<<endl;
+
+}
